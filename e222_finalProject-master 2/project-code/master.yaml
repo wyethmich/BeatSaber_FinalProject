@@ -1,0 +1,136 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0-oas3"
+  title: Prediction of Beat Saber Scores
+  description: Predict Beat Saber song user score based on features
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    name: 'Wyeth Michaelsen, Michael Mitsch, Ethan Nguyen, Drew Willis'
+  license:
+    name: Apache
+
+paths:
+  '/run/{modelName}':
+    get:
+      operationId: scripts.serverDriver.runPrediction
+      description: Displays upload file page
+      parameters:
+        - name: modelName
+          in: path
+          description: The model that needs to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Upload page displayed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responImage"
+  '/train/{modelName}':
+    get:
+      operationId: scripts.serverDriver.trainModel
+      description: Trains model on data.
+      parameters:
+        - name: modelName
+          in: path
+          description: The name of the model to save as.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Model trained successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responString"
+
+  '/getMaps/{startKey}/{stopKey}':
+    get:
+      operationId: scripts.serverDriver.getNewBeatSaverMaps
+      description: Pulls new Beat Saver Maps
+      parameters:
+        - name: startKey
+          in: path
+          description: Hex Key of which map to start requesting
+          required: true
+          schema:
+            type: string
+        - name: stopKey
+          in: path
+          description: Hex Key of which map to stop requesting
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Map retrieval was successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responString"
+
+  '/importGoogleData/{urlID}':
+    get:
+      operationId: scripts.serverDriver.importDataFromGoogle
+      description: Gets url data from google 
+      parameters:
+        - name: urlID
+          in: path
+          description: ID of the url for the stored data on google
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Data retrieval was successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responString"
+
+  /availableMaps:
+    get:
+      operationId: scripts.serverDriver.availMaps
+      description: New maps available for training
+      responses:
+        '200':
+          description: File upload successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responString"
+          
+  /availableModels:
+    get:
+      operationId: scripts.serverDriver.availModels
+      description: Available models 
+      responses:
+        '200':
+          description: File upload successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responString"
+
+servers:
+  - url: http://localhost:8080/api/
+components:
+  schemas:
+    responString:
+      type: object
+      required:
+        - model
+      properties:
+        model:
+          type: string
+    responImage:
+      type: object
+      required:
+        - model
+      properties:
+        model:
+          type: string
+          format: binary
